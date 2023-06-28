@@ -42,15 +42,15 @@ param clusterAuthorizedIPRanges array = []
   'japaneast'
   'southeastasia'
 ])
-param location string = 'eastus2'
+param location string = 'uksouth'
 param kubernetesVersion string = '1.26.0'
 
 @description('Domain name to use for App Gateway and AKS ingress.')
-param domainName string = 'contoso.com'
+param domainName string = 'freundcloud.com'
 
 @description('Your cluster will be bootstrapped from this git repo.')
 @minLength(9)
-param gitOpsBootstrappingRepoHttpsUrl string = 'https://github.com/mspnp/aks-baseline'
+param gitOpsBootstrappingRepoHttpsUrl string = 'https://github.com/olafkfreund/aks-baseline'
 
 @description('You cluster will be bootstrapped from this branch in the identified git repo.')
 @minLength(1)
