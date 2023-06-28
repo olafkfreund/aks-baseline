@@ -44,10 +44,10 @@ resource hubVirtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' existi
 }
 
 // This is the firewall that was deployed in 'hub-default.bicep'
-resource hubFirewall 'Microsoft.Network/azureFirewalls@2021-05-01' existing = {
-  scope: hubResourceGroup
-  name: 'fw-${location}'
-}
+// resource hubFirewall 'Microsoft.Network/azureFirewalls@2021-05-01' existing = {
+//   scope: hubResourceGroup
+//   name: 'fw-${location}'
+// }
 
 // This is the networking log analytics workspace (in the hub)
 resource laHub 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
@@ -58,22 +58,22 @@ resource laHub 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = 
 /*** RESOURCES ***/
 
 // Next hop to the regional hub's Azure Firewall
-resource routeNextHopToFirewall 'Microsoft.Network/routeTables@2021-05-01' = {
-  name: 'route-to-${location}-hub-fw'
-  location: location
-  properties: {
-    routes: [
-      {
-        name: 'r-nexthop-to-fw'
-        properties: {
-          nextHopType: 'VirtualAppliance'
-          addressPrefix: '0.0.0.0/0'
-          nextHopIpAddress: hubFirewall.properties.ipConfigurations[0].properties.privateIPAddress
-        }
-      }
-    ]
-  }
-}
+// resource routeNextHopToFirewall 'Microsoft.Network/routeTables@2021-05-01' = {
+//   name: 'route-to-${location}-hub-fw'
+//   location: location
+//   properties: {
+//     routes: [
+//       {
+//         name: 'r-nexthop-to-fw'
+//         properties: {
+//           nextHopType: 'VirtualAppliance'
+//           addressPrefix: '0.0.0.0/0'
+//           nextHopIpAddress: hubFirewall.properties.ipConfigurations[0].properties.privateIPAddress
+//         }
+//       }
+//     ]
+//   }
+// }
 
 // Default NSG on the AKS nodepools. Feel free to constrict further.
 resource nsgNodepoolSubnet 'Microsoft.Network/networkSecurityGroups@2021-05-01' = {
@@ -295,9 +295,9 @@ resource vnetSpoke 'Microsoft.Network/virtualNetworks@2021-05-01' = {
         name: 'snet-clusternodes'
         properties: {
           addressPrefix: '10.240.0.0/22'
-          routeTable: {
-            id: routeNextHopToFirewall.id
-          }
+          // routeTable: {
+          //   id: routeNextHopToFirewall.id
+          // }
           networkSecurityGroup: {
             id: nsgNodepoolSubnet.id
           }
@@ -309,9 +309,9 @@ resource vnetSpoke 'Microsoft.Network/virtualNetworks@2021-05-01' = {
         name: 'snet-clusteringressservices'
         properties: {
           addressPrefix: '10.240.4.0/28'
-          routeTable: {
-            id: routeNextHopToFirewall.id
-          }
+          // routeTable: {
+          //   id: routeNextHopToFirewall.id
+          // }
           networkSecurityGroup: {
             id: nsgInternalLoadBalancerSubnet.id
           }
